@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -31,6 +29,7 @@ public class CaesarMain {
 
         String decryptedText = decryptCaesar(encryptedText, offset);
         System.out.println("Decrypted text: " + decryptedText);
+        writeEncryptedToFile(encryptedText);
     }
 
     private static String encryptCaesar(String text, int offset) {
@@ -94,6 +93,19 @@ public class CaesarMain {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    private static void writeEncryptedToFile(String encryptedText) {
+        try {
+            File file = new File(
+                    "/home/maksym/PROGRAMS/Java/DataProtection/caesar/res/encrypted.txt");
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+
+            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
+            bufferedWriter.write(encryptedText);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
