@@ -8,8 +8,6 @@ import java.util.Scanner;
 
 public class CaesarMain {
     private static ArrayList<String> alphabet = new ArrayList<>();
-    private static ArrayList<String> alphabetUpper = new ArrayList<>();
-    //private static String input;
 
     public static void main(String[] args) {
         readAlphabet();
@@ -72,10 +70,6 @@ public class CaesarMain {
             while ((currentLine = bufferedReader.readLine()) != null) {
                 alphabet.add(currentLine);
             }
-
-            for (String letter : alphabet) {
-                alphabetUpper.add(letter.toUpperCase());
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -89,6 +83,7 @@ public class CaesarMain {
             while ((currentLine = bufferedReader.readLine()) != null) {
                 input = currentLine;
             }
+            bufferedReader.close();
             return input;
         } catch (IOException e) {
             e.printStackTrace();
@@ -100,10 +95,10 @@ public class CaesarMain {
         try {
             File file = new File(
                     "/home/maksym/PROGRAMS/Java/DataProtection/caesar/res/encrypted.txt");
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-
-            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
-            bufferedWriter.write(encryptedText);
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(encryptedText);
+            fileWriter.flush();
+            fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
