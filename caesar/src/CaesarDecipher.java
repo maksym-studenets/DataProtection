@@ -1,24 +1,24 @@
+import com.google.common.io.Resources;
 import com.sun.istack.internal.Nullable;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 
 /**
  * Main class for the deciphering application
  */
 public class CaesarDecipher {
-    private static ArrayList<String> alphabet = new ArrayList<>();
     private static HashMap<Character, Integer> letterStats = new HashMap<>();
     private static Set<Map.Entry<Character, Integer>> sortedLetterOccurrence;
-    //private static Multiset<Character> occurrences = HashMultiset.create();
+    private static ArrayList<Character> letters = new ArrayList<>();
 
     public static void main(String[] args) {
         String encryptedText = readEncryptedFile();
         try {
             generateCharOccurrenceStats(encryptedText);
-            //multiSetCharOccurrence(encryptedText);
             sortLetterMap();
             decipherText(encryptedText);
         } catch (NullPointerException e) {
@@ -26,40 +26,36 @@ public class CaesarDecipher {
         }
     }
 
-    private static String decipherText(String encryptedText) {
-        readAlphabet();
+    private static void decipherText(String encryptedText) {
+        CaesarMain.readAlphabet();
         ArrayList<Character> ukrainianLettersSorted = readUkrainianLetterStatistics();
-        ArrayList<Character> letters = new ArrayList<>();
         for (Map.Entry<Character, Integer> entry : sortedLetterOccurrence) {
             letters.add(entry.getKey());
         }
 
-        StringBuilder decryptedText = new StringBuilder("");
+        //StringBuilder decryptedText = new StringBuilder("");
+        Scanner in = new Scanner(System.in);
 
-        for (int i = 0; i < letters.size(); i++) {
-            int encryptedLetterIndex = alphabet.indexOf(String.valueOf(letters.get(i)));
-            int generalAlphabetIndex = alphabet.indexOf(String.valueOf(ukrainianLettersSorted.get(i)));
-            int offset = encryptedLetterIndex - generalAlphabetIndex;
+        for (Character letter : letters) {
+            for (int j = 0; j < 2; j++) {
+                int encryptedLetterIndex = CaesarMain.alphabet.indexOf(String.valueOf(letter));
+                int generalAlphabetIndex = CaesarMain.alphabet.indexOf(String.valueOf(ukrainianLettersSorted
+                        .get(j)));
+                int offset = encryptedLetterIndex - generalAlphabetIndex;
 
-
-            for (int j = 0; j < encryptedText.length(); j++) {
-                //char character = encryptedText.charAt(j);
-                int index = alphabet.indexOf(String.valueOf(encryptedText.charAt(j)));
-                int newIndex = index - offset;
-                decryptedText.append(alphabet.get(newIndex));
+                String decrypted = CaesarMain.decryptCaesar(encryptedText, offset);
+                System.out.println("Decrypted sequence: " + decrypted + "\n -- Offset: " + offset);
+                System.out.println("------------");
             }
-
-            System.out.println("Decrypted Text: " + decryptedText.toString());
         }
-
-        return decryptedText.toString();
     }
 
     @Nullable
     private static String readEncryptedFile() {
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(
-                    "/home/maksym/PROGRAMS/Java/DataProtection/caesar/res/encrypted.txt"));
+            URL url = Resources.class.getClassLoader().getResource("encrypted.txt");
+
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(url.getPath()));
             String currentLine, input = null;
             while ((currentLine = bufferedReader.readLine()) != null)
                 input = currentLine;
@@ -73,8 +69,9 @@ public class CaesarDecipher {
     private static ArrayList<Character> readUkrainianLetterStatistics() {
         try {
             ArrayList<Character> letterOccurrence = new ArrayList<>();
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(
-                    "/home/maksym/PROGRAMS/Java/DataProtection/caesar/res/ua_letter_stats.txt"));
+
+            URL url = Resources.class.getClassLoader().getResource("ua_letter_stats.txt");
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(url.getPath()));
             String currentLine, input = null;
             while ((currentLine = bufferedReader.readLine()) != null) {
                 input = currentLine;
@@ -97,9 +94,6 @@ public class CaesarDecipher {
             }
         }
         letterStats.remove(' ');
-
-        System.out.println("Letter statistics");
-        System.out.println(letterStats);
     }
 
     private static void sortLetterMap() {
@@ -120,16 +114,9 @@ public class CaesarDecipher {
         sortedLetterOccurrence = sortedByValue.entrySet();
     }
 
-    private static void readAlphabet() {
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(
-                    "/home/maksym/PROGRAMS/Java/DataProtection/caesar/res/alphabet.txt"));
-            String currentLine;
-            while ((currentLine = bufferedReader.readLine()) != null) {
-                alphabet.add(currentLine);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    /*
+    private static String frequencyAnalysis(String text) {
+
     }
+  */
 }
