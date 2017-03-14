@@ -10,23 +10,24 @@ import java.util.Scanner;
  */
 
 public class CaesarMain {
-    public static ArrayList<String> alphabet = new ArrayList<>();
+    static ArrayList<String> alphabet = new ArrayList<>();
 
     public static void main(String[] args) {
         readAlphabet();
         String input = readFile();
+
+        System.out.println("Input text: " + input);
 
         System.out.print("Offset: ");
         Scanner in = new Scanner(System.in);
         int offset = in.nextInt();
 
         String encryptedText = encryptCaesar(input, offset);
-        System.out.println("Input text: " + input);
         System.out.println("Encrypted text: " + encryptedText);
 
-        System.out.println(" ------------------------------- ");
-        System.out.println(" ------------------------------- ");
-        System.out.println(" ------------------------------- ");
+        System.out.println(" --------------------------------- ");
+        System.out.println(" --------------------------------- ");
+        System.out.println(" --------------------------------- ");
 
         String decryptedText = decryptCaesar(encryptedText, offset);
         System.out.println("Decrypted text: " + decryptedText);
@@ -64,6 +65,9 @@ public class CaesarMain {
 
     private static String encryptCaesar(String text, int offset) {
         text = text.toLowerCase();
+
+        if (offset < 0)
+            offset = 32 + offset;
 
         String encryptedText = "";
         String replacementValue;
@@ -103,6 +107,16 @@ public class CaesarMain {
             fileWriter.write(encryptedText);
             fileWriter.flush();
             fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void writeEncryptionKey(int key) {
+        try {
+            File file = new File(
+                    "D:\\Progs\\JAVA\\2017\\1\\DataProtection\\caesar\\res\\key.txt");
+            FileWriter fileWriter = new FileWriter(file);
         } catch (IOException e) {
             e.printStackTrace();
         }
