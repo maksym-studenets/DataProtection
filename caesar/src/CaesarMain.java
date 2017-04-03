@@ -83,7 +83,7 @@ public class CaesarMain {
     }
 
 
-    private static String readFile() {
+    public static String readFile() {
         try {
             URL url = Resources.class.getClassLoader().getResource("input.txt");
             BufferedReader bufferedReader = new BufferedReader(new FileReader(url.getPath()));
