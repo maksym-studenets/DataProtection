@@ -16,7 +16,6 @@ public class AthensDecryptor {
     private static ArrayList<Integer> keys = new ArrayList<>();
     private static int a;
     private static int b;
-    private static int module = 26;
 
     public static void main(String[] args) {
         String encryptedText = readEncryptedFile();
@@ -31,6 +30,7 @@ public class AthensDecryptor {
         StringBuilder stringBuilder = new StringBuilder();
 
         try {
+            int module = 26;
             BigInteger aInverse = BigInteger.valueOf(a).modInverse(BigInteger.valueOf(module));
 
             char letter;

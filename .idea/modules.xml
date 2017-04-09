@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/athens-caesar/athens-caesar.iml" filepath="$PROJECT_DIR$/athens-caesar/athens-caesar.iml" />
       <module fileurl="file://$PROJECT_DIR$/caesar/caesar.iml" filepath="$PROJECT_DIR$/caesar/caesar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xor-cipher/xor-cipher.iml" filepath="$PROJECT_DIR$/xor-cipher/xor-cipher.iml" />
     </modules>
   </component>
 </project>

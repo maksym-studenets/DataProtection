@@ -1,0 +1,1 @@
+This is a simple example of an xor encryption task written in Java

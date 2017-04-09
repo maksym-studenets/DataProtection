@@ -1,8 +1,6 @@
 import com.google.common.io.Resources;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -12,7 +10,7 @@ import java.util.Scanner;
  */
 public class KeywordEncryptor {
 
-    private static ArrayList<Character> alphabet = new ArrayList<>();
+    static ArrayList<Character> alphabet = new ArrayList<>();
     private static String input;
 
     public static void main(String[] args) {
@@ -31,12 +29,16 @@ public class KeywordEncryptor {
         System.out.println("Shift: ");
         shift = in.nextInt();
 
-        String encrypted = encryptVigere(keyword, shift);
+        writeKeys(keyword, shift);
+
+        String encrypted = encryptVigenere(keyword, shift);
         System.out.println("Encrypted: " + encrypted);
+        writeEncrypted(encrypted);
     }
 
 
-    private static String encryptVigere(String key, int shift) {
+    private static String encryptVigenere(String key, int shift) {
+        shift = (int) alphabet.get(shift);
         StringBuilder stringBuilder = new StringBuilder();
         if (shift < 0) {
             shift += 26;
@@ -48,7 +50,9 @@ public class KeywordEncryptor {
                 letter = ' ';
             } else {
                 int letterIndex = ((input.charAt(i) + key.charAt(i % key.length()) - 2 * shift) % 26);
-                letter = (char) (letterIndex + shift);
+                //letter = (char) (letterIndex + shift);
+                int index = (letterIndex + shift) % alphabet.size();
+                letter = alphabet.get(index);
             }
             stringBuilder.append(letter);
         }
@@ -56,9 +60,38 @@ public class KeywordEncryptor {
         return stringBuilder.toString();
     }
 
+    private static void writeEncrypted(String encrypted) {
+        try {
+            File file = new File(
+                    "D:\\Progs\\JAVA\\2017\\1\\DataProtection\\athens-caesar\\" +
+                            "res\\encrypted_vigenere.txt");
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(encrypted);
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void writeKeys(String key, int shift) {
+        try {
+            File file = new File("D:\\Progs\\JAVA\\2017\\1\\DataProtection" +
+                    "\\athens-caesar\\res\\keys_vigenere.txt");
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(key);
+            fileWriter.write("\n");
+            fileWriter.write(String.valueOf(shift));
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static String readInput() {
         try {
-            URL url = Resources.class.getClassLoader().getResource("input_vigere.txt");
+            URL url = Resources.class.getClassLoader().getResource("input_vigenere.txt");
             BufferedReader bufferedReader = new BufferedReader(new FileReader(url.getPath()));
             String currentLine, input = null;
             while ((currentLine = bufferedReader.readLine()) != null) {
@@ -72,7 +105,7 @@ public class KeywordEncryptor {
         }
     }
 
-    private static void readAlphabet() {
+    static void readAlphabet() {
         try {
             URL url = Resources.class.getClassLoader().getResource("alphabet.txt");
             BufferedReader bufferedReader = new BufferedReader(new FileReader(url.getPath()));

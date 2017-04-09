@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Scanner;
 
 /**
@@ -9,6 +10,9 @@ import java.util.Scanner;
 public class AthensEncryptor {
 
     private static String input;
+    private static boolean isAPrime;
+    private static boolean isBPrime;
+    private static boolean isGcdOne;
 
     public static void main(String[] args) {
         input = CaesarMain.readFile();
@@ -21,6 +25,8 @@ public class AthensEncryptor {
         int b = in.nextInt();
         in.close();
 
+        checkKeys(a, b, 26);
+
         String encrypted = encryptAffine(a, b);
         writeKeysToFile(a, b);
 
@@ -28,21 +34,36 @@ public class AthensEncryptor {
         writeEncryptedToFile(encrypted);
     }
 
-    private static String encryptAffine(int a, int b) {
-        input = input.toLowerCase();
-        StringBuilder decryptedBuilder = new StringBuilder();
+    private static void checkKeys(int a, int b, int alphabetSize) {
+        BigInteger aKey = BigInteger.valueOf(a);
+        BigInteger bKey = BigInteger.valueOf(b);
+        BigInteger alphaSize = BigInteger.valueOf(alphabetSize);
 
-        char letter;
-        for (int i = 0; i < input.length(); i++) {
-            if (input.charAt(i) == ' ') {
-                letter = ' ';
-            } else {
-                //letter = (char) ((((a * input.charAt(i)) + b) % 26) + 65);
-                letter = (char) ((a * (input.charAt(i) - 'a') + b) % 26 + 'a');
+        isAPrime = aKey.isProbablePrime(1);
+        isBPrime = bKey.isProbablePrime(1);
+        int gcd = aKey.gcd(BigInteger.valueOf(26)).intValue();
+        isGcdOne = (gcd == 1);
+    }
+
+    private static String encryptAffine(int a, int b) {
+
+        if (isAPrime && isBPrime && isGcdOne) {
+            input = input.toLowerCase();
+            StringBuilder decryptedBuilder = new StringBuilder();
+
+            char letter;
+            for (int i = 0; i < input.length(); i++) {
+                if (input.charAt(i) == ' ') {
+                    letter = ' ';
+                } else {
+                    letter = (char) ((a * (input.charAt(i) - 'a') + b) % 26 + 'a');
+                }
+                decryptedBuilder.append(letter);
             }
-            decryptedBuilder.append(letter);
+            return decryptedBuilder.toString();
+        } else {
+            return "NUMBERS DO NOT MATCH CONDITION";
         }
-        return decryptedBuilder.toString();
     }
 
     private static void writeKeysToFile(int a, int b) {

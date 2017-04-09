@@ -67,7 +67,7 @@ public class CaesarMain {
         text = text.toLowerCase();
 
         if (offset < 0)
-            offset = 32 + offset;
+            offset += 32;
 
         String encryptedText = "";
         String replacementValue;
